@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+	<link rel="stylesheet" href="style.css">
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="knockout-3.4.2.js"></script>
+    <script type="text/javascript">
+        
+
+		jQuery.support.cors = true;
+		
+        $(document).ready(function() {
+
+            var customerDetailsViewModel = function() {
+            var self = this;
+			
+			self.Email = ko.observable("");
+            self.FirstName = ko.observable("");
+            self.LastName = ko.observable("");
+            self.SuccessMessage = ko.observable("");
+			
+			
+			
+			
+
+            self.SaveCustomerDetails = function () {              
+                
+				var CustomerDetail = {
+				
+				Email: self.Email(),
+				FirstName: self.FirstName(),
+				LastName: self.LastName()
+				
+				}
+				
+				
+				
+				
+				
+				$.ajax({
+					crossDomain: true,
+				
+                    url: 'https://wbr2yofaxc.execute-api.us-east-1.amazonaws.com/dev//postcustomerdetails',
+					
+					
+                    cache: false,
+                    type: 'POST', 
+                    data: ko.toJSON(CustomerDetail),
+                    success: function (data) {              
+                        self.SuccessMessage(data)
+							self.Email('');
+							self.FirstName('');
+							self.LastName('');
+							
+						
+                    }
+					}).fail(
+					
+					
+					function(xhr, textStatus, err){
+					alert("Error happened "+err);
+					
+                });
+            };
+        }
+
+            var viewModel = new customerDetailsViewModel();
+            ko.applyBindings(viewModel);
+         });
+
+       
+    </script>
+</head>
+<body>
+	<div id="box">
+	<h1>Save your details!!</h1>
+	<br/>
+	<br/>
+    <table>
+        <tr>
+            <td>
+				<div>
+				<p>
+					Email:
+					<input data-bind='value: Email' />
+					
+					</p>
+					
+					<p>
+					
+						FirstName:
+						<input data-bind='value: FirstName' />
+						</p>
+						<p>
+						LastName:
+						<input data-bind='value: LastName' />
+						</p>
+						
+						</div>
+						
+					<span style ="color: darkolivegreen" data-bind='text : SuccessMessage' />
+					
+				</td>
+				</tr>
+				<tr>
+					<td>
+						<div>
+								<button data-bind="click: $root.SaveCustomerDetails" > Save </button>
+							</div>
+						</td>
+					</tr>
+					
+				</table>
+			</div>
+		</body>
+		</html>
